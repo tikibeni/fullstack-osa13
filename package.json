@@ -1,0 +1,25 @@
+{
+  "name": "fullstack-osa13",
+  "version": "1.0.0",
+  "description": "Repositoriopohja palautuksia varten.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tikibeni/fullstack-osa13.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tikibeni/fullstack-osa13/issues"
+  },
+  "homepage": "https://github.com/tikibeni/fullstack-osa13#readme",
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "pg": "^8.7.3",
+    "sequelize": "^6.20.1"
+  }
+}
