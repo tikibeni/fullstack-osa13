@@ -1,7 +1,10 @@
 const Blog = require('./blog')
 const User = require('./user')
 
-Blog.sync().then(_ => console.log(`Sync done for Blog-model`))
-User.sync().then(_ => console.log(`Sync done for User-model`))
+User.hasMany(Blog)
+Blog.belongsTo(User)
+
+Blog.sync({ alter: true }).then(_ => console.log(`Sync done for Blog-model`))
+User.sync({ alter: true }).then(_ => console.log(`Sync done for User-model`))
 
 module.exports = { Blog, User }

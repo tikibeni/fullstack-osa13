@@ -1,7 +1,7 @@
 const router = require('express').Router()
 
-const { Blog } = require('../models')
-const { errorHandler } = require('./util')
+const { Blog, User } = require('../models')
+const { errorHandler, tokenExtractor } = require('./util')
 
 /** Middleware yksittäisblogin kaivamiseksi. */
 const blogFinder = async (req, res, next) => {
@@ -24,8 +24,9 @@ router.get('/:id', blogFinder, async (req, res) => {
     }
 })
 
-router.post('/', async (req, res, next) => {
-    const blog = await Blog.create(req.body).catch(error => next(error))
+router.post('/', tokenExtractor, async (req, res, next) => {
+    const user = await User.findByPk(req.decodedToken.id)
+    const blog = await Blog.create({ ...req.body, userId: user.id })
     return res.json(blog.toJSON())
 })
 
