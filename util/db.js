@@ -6,8 +6,10 @@ const sequelize = new Sequelize(DATABASE_URL, {
         ssl: {
             require: true,
             rejectUnauthorized: false
-        }
+        },
+        timezone: "Europe/Helsinki"
     },
+    timezone: "Europe/Helsinki"
 });
 
 const connectToDatabase = async () => {
