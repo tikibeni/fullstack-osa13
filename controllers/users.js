@@ -1,6 +1,6 @@
 const router = require('express').Router()
 
-const { User, Blog, Readlist } = require('../models')
+const { User, Blog } = require('../models')
 const { errorHandler } = require('./util')
 
 /** Middleware yksittäiskäyttäjän kaivamiseksi. */
@@ -28,6 +28,25 @@ router.get('/', async (req, res) => {
         ]
     })
     res.json(users)
+})
+
+router.get('/:id', userFinder, async (req, res) => {
+    const user = await User.findByPk(req.params.id, {
+        include: [
+            {
+                model: Blog,
+                as: 'listedBlogs',
+                attributes: { exclude: ['userId'] },
+                through: { attributes: ['read'] }
+            }
+        ]
+    })
+
+    if (user) {
+        res.json(user)
+    } else {
+        res.status(404).end()
+    }
 })
 
 router.post('/', async (req, res) => {

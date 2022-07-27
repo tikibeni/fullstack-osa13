@@ -6,8 +6,8 @@ module.exports = {
             type: DataTypes.INTEGER,
             allowNull: false,
             validate: {
-                isAfter: "1991",
-                isBefore: "2023" // Tämä voisi olla dynaamisempi... ('new Date.now.getYear()+1' tms)
+                isAfter: '1991',
+                isBefore: '2023' // Tämä voisi olla dynaamisempi... ('new Date.now.getYear()+1' tms)
             },
         })
     },

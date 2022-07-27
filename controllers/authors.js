@@ -1,6 +1,6 @@
 const router = require('express').Router()
 
-const { sequelize } = require("../util/db");
+const { sequelize } = require('../util/db')
 const { Blog } = require('../models')
 const { errorHandler } = require('./util')
 

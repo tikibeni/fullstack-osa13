@@ -8,10 +8,10 @@ const sequelize = new Sequelize(DATABASE_URL, {
             require: true,
             rejectUnauthorized: false
         },
-        timezone: "Europe/Helsinki"
+        timezone: 'Europe/Helsinki'
     },
-    timezone: "Europe/Helsinki"
-});
+    timezone: 'Europe/Helsinki'
+})
 
 const connectToDatabase = async () => {
     try {
