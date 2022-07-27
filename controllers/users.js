@@ -1,6 +1,6 @@
 const router = require('express').Router()
 
-const { User, Blog } = require('../models')
+const { User, Blog, Readlist } = require('../models')
 const { errorHandler } = require('./util')
 
 /** Middleware yksittäiskäyttäjän kaivamiseksi. */
@@ -13,7 +13,20 @@ const userFinder = async (req, res, next) => {
 }
 
 router.get('/', async (req, res) => {
-    const users = await User.findAll({ include: { model: Blog } })
+    const users = await User.findAll({
+        include: [
+            {
+                model: Blog ,
+                attributes: { exclude: ['userId'] }
+            },
+            {
+                model: Blog,
+                as: 'listedBlogs',
+                attributes: { exclude: ['userId'] },
+                through: { attributes: ['read'] }
+            }
+        ]
+    })
     res.json(users)
 })
 
