@@ -23,24 +23,14 @@ router.get('/:id', blogFinder, async (req, res) => {
     }
 })
 
-router.post('/', async (req, res) => {
-    try {
-        const blog = await Blog.create(req.body)
-        return res.json(blog.toJSON())
-    } catch (e) {
-        return res.status(400).json({ e })
-    }
+router.post('/', async (req, res, next) => {
+    const blog = await Blog.create(req.body).catch(error => next(error))
+    return res.json(blog.toJSON())
 })
 
 router.delete('/:id', blogFinder, async (req, res) => {
-    if (req.blog) {
-        await req.blog.destroy()
-            .finally(
-                res.status(204).end()
-            )
-    } else {
-        res.status(404).end()
-    }
+    await req.blog.destroy()
+    res.status(204).end()
 })
 
 router.put('/:id', blogFinder, async (req, res) => {
@@ -52,5 +42,22 @@ router.put('/:id', blogFinder, async (req, res) => {
         res.status(404).end()
     }
 })
+
+const errorHandler = (error, req, res, next) => {
+    console.error(error.message)
+
+    if (error.name === 'CastError') {
+        return res.status(400).send({ error: 'malformatted id' })
+    }
+    if (['ValidationError', 'SequelizeDatabaseError'].includes(error.name)) {
+        return res.status(400).json({ message: error.message })
+    }
+
+    next(error)
+}
+
+router.use(errorHandler)
+
+// Router hyödyntää myös 'express-async-errors'-depiä näkyvän try-catchin deprekoimiseksi.
 
 module.exports = router
