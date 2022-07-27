@@ -2,6 +2,7 @@ const router = require('express').Router()
 
 const { Blog, User } = require('../models')
 const { errorHandler, tokenExtractor } = require('./util')
+const { Op } = require('sequelize')
 
 /** Middleware yksittäisblogin kaivamiseksi. */
 const blogFinder = async (req, res, next) => {
@@ -10,12 +11,21 @@ const blogFinder = async (req, res, next) => {
 }
 
 router.get('/', async (req, res) => {
+    const where = {}
+
+    if (req.query.search) {
+        where.title = {
+            [Op.substring]: req.query.search
+        }
+    }
+
     const blogs = await Blog.findAll({
         attributes: { exclude: ['userId'] },
         include: {
             model: User,
             attributes: ['name']
-        }
+        },
+        where
     })
     const tulostusBlogit = blogs.map(blog => `${blog.toJSON().author}: '${blog.toJSON().title}', ${blog.toJSON().likes} likes`)
     tulostusBlogit.forEach(s => console.log(s))
