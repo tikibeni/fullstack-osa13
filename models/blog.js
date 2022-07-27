@@ -25,6 +25,14 @@ Blog.init({
     likes: {
         type: DataTypes.INTEGER,
         defaultValue: 0
+    },
+    year: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+            isAfter: "1991",
+            isBefore: "2023" // Tämä voisi olla dynaamisempi... ('new Date.now.getYear()+1' tms)
+        },
     }
 }, {
     sequelize,

@@ -4,14 +4,15 @@ const { SECRET } = require('../util/config')
 /** Middleware virheidenkäsittelylle */
 const errorHandler = (error, req, res, next) => {
     console.error(error.message)
+    console.error(error)
 
     if (error.name === 'CastError') {
         return res.status(400).send({ error: 'malformatted id' })
     }
-    if (['ValidationError', 'SequelizeValidationError', 'SequelizeDatabaseError'].includes(error.name)) {
-        if (error.name === 'SequelizeValidationError') {
-            return res.status(400).json({ message: `Toimintoon liittyvä validointivirhe - korjaa arvojen muodot. Lisäinfoa: ${error.message}` })
-        }
+    if (error.name === 'SequelizeValidationError') {
+        return res.status(400).json({ message: `Toimintoon liittyvä validointivirhe - korjaa arvojen muodot. Lisäinfoa: ${error.message}` })
+    }
+    if (['ValidationError', 'SequelizeDatabaseError'].includes(error.name)) {
         return res.status(400).json({ message: error.message })
     }
 
