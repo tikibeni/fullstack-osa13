@@ -1,6 +1,7 @@
 const router = require('express').Router()
 
 const { Blog } = require('../models')
+const { errorHandler } = require('./util')
 
 /** Middleware yksittäisblogin kaivamiseksi. */
 const blogFinder = async (req, res, next) => {
@@ -43,21 +44,7 @@ router.put('/:id', blogFinder, async (req, res) => {
     }
 })
 
-const errorHandler = (error, req, res, next) => {
-    console.error(error.message)
-
-    if (error.name === 'CastError') {
-        return res.status(400).send({ error: 'malformatted id' })
-    }
-    if (['ValidationError', 'SequelizeDatabaseError'].includes(error.name)) {
-        return res.status(400).json({ message: error.message })
-    }
-
-    next(error)
-}
-
 router.use(errorHandler)
 
 // Router hyödyntää myös 'express-async-errors'-depiä näkyvän try-catchin deprekoimiseksi.
-
 module.exports = router
