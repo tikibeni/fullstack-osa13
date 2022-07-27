@@ -2,6 +2,7 @@ const router = require('express').Router()
 
 const { User, Blog } = require('../models')
 const { errorHandler } = require('./util')
+const { Op } = require('sequelize')
 
 /** Middleware yksittäiskäyttäjän kaivamiseksi. */
 const userFinder = async (req, res, next) => {
@@ -31,14 +32,22 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/:id', userFinder, async (req, res) => {
+    let where = {}
+
+    if (req.query.read) {
+        where = {
+            read: req.query.read
+        }
+    }
+
     const user = await User.findByPk(req.params.id, {
         include: [
             {
                 model: Blog,
                 as: 'listedBlogs',
                 attributes: { exclude: ['userId'] },
-                through: { attributes: ['read', 'id'] }
-            }
+                through: { attributes: ['read', 'id'], where },
+            },
         ]
     })
 
