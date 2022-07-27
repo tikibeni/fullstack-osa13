@@ -36,7 +36,10 @@ router.get('/', async (req, res) => {
             model: User,
             attributes: ['name']
         },
-        where
+        where,
+        order: [
+            ['likes', 'desc']
+        ]
     })
     const tulostusBlogit = blogs.map(blog => `${blog.toJSON().author}: '${blog.toJSON().title}', ${blog.toJSON().likes} likes`)
     tulostusBlogit.forEach(s => console.log(s))
