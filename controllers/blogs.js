@@ -10,7 +10,13 @@ const blogFinder = async (req, res, next) => {
 }
 
 router.get('/', async (req, res) => {
-    const blogs = await Blog.findAll()
+    const blogs = await Blog.findAll({
+        attributes: { exclude: ['userId'] },
+        include: {
+            model: User,
+            attributes: ['name']
+        }
+    })
     const tulostusBlogit = blogs.map(blog => `${blog.toJSON().author}: '${blog.toJSON().title}', ${blog.toJSON().likes} likes`)
     tulostusBlogit.forEach(s => console.log(s))
     res.json(blogs)
